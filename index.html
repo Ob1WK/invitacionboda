@@ -274,6 +274,76 @@
       margin: 2.5rem auto 0;
     }
 
+    /* ─── Scroll indicator ─── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      opacity: 0;
+      animation: scroll-fade-in 1s ease 2.5s forwards;
+      transition: opacity 0.6s ease;
+      cursor: default;
+    }
+
+    .scroll-indicator.hidden {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+
+    .scroll-indicator-text {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--earth-dark);
+    }
+
+    .scroll-indicator-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: scroll-bounce 2s ease-in-out infinite;
+    }
+
+    .scroll-indicator-arrow svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--olive-dark);
+      stroke-width: 1.5;
+      fill: none;
+    }
+
+    .scroll-indicator-arrow svg:last-child {
+      margin-top: -10px;
+      opacity: 0.4;
+    }
+
+    @keyframes scroll-fade-in {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes scroll-bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(6px);
+      }
+    }
+
     /* ─── SECTION: Hero ─── */
     .section-hero {
       padding: 6rem 2rem 4rem;
@@ -1739,6 +1809,14 @@
         «…yo y mi casa serviremos a Jehová.»
       </p>
       <div class="verse-divider reveal reveal-delay-3"></div>
+
+      <div class="scroll-indicator" id="scrollIndicator">
+        <span class="scroll-indicator-text">Deslizá para descubrir más</span>
+        <div class="scroll-indicator-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
     </section>
 
     <!-- ─── Hero ─── -->
@@ -2190,6 +2268,16 @@
         screen.style.display = 'none';
         flash.style.display = 'none';
         initReveal();
+
+        // Hide scroll indicator once user starts scrolling
+        const scrollHint = document.getElementById('scrollIndicator');
+        function hideScrollHint() {
+          if (window.scrollY > 80) {
+            scrollHint.classList.add('hidden');
+            window.removeEventListener('scroll', hideScrollHint);
+          }
+        }
+        window.addEventListener('scroll', hideScrollHint, { passive: true });
       }, 2200);
     }
 
